@@ -1,3 +1,3 @@
-module com.github/adedayo/go-lsp
+module github.com/adedayo/go-lsp
 
 go 1.13
