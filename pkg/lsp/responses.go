@@ -2,6 +2,10 @@ package lsp
 
 import "encoding/json"
 
+//ResponseMessage see https://microsoft.github.io/language-server-protocol/specifications/specification-3-15/#responseMessage
+type ResponseMessage struct {
+}
+
 //InitializeResult see: https://microsoft.github.io/language-server-protocol/specifications/specification-3-15/#initialize
 type InitializeResult struct {
 	Capabilities ServerCapabilities `json:"capabilities"`
@@ -37,9 +41,9 @@ type ServerCapabilities struct {
 	// RenameProvider                   *renameUnion                   `json:"renameProvider,omitempty"`
 	// FoldingRangeProvider             *foldingRangeUnion             `json:"foldingRangeProvider,omitempty"`
 	// ExecuteCommandProvider           *ExecuteCommandOptions         `json:"executeCommandProvider,omitempty"`
-	WorkspaceSymbolProvider *bool `json:"workspaceSymbolProvider,omitempty"`
-	// Workspace                        *workspaceServerCapabilities   `json:"workspace,omitempty"`
-	Experimental *json.RawMessage `json:"experimental,omitempty"`
+	WorkspaceSymbolProvider *bool                        `json:"workspaceSymbolProvider,omitempty"`
+	Workspace               *workspaceServerCapabilities `json:"workspace,omitempty"`
+	Experimental            *json.RawMessage             `json:"experimental,omitempty"`
 }
 
 type textDocumentSyncKind int
@@ -320,6 +324,35 @@ func (ru *documentHighlightUnion) UnmarshalJSON(js []byte) error {
 	*ru = documentHighlightUnion{}
 	if err := json.Unmarshal(js, ru.Boolean); err != nil {
 		return json.Unmarshal(js, &ru.Options)
+	}
+	return nil
+}
+
+type workspaceServerCapabilities struct {
+	WorkspaceFolders WorkspaceFolderServerCapabilities
+}
+
+type WorkspaceFolderServerCapabilities struct {
+	Supported           *bool                `json:"supported,omitempty"`
+	ChangeNotifications *changeNotifications `json:"changeNotifications,omitempty"`
+}
+
+type changeNotifications struct {
+	Boolean *bool
+	ID      *string
+}
+
+func (cn *changeNotifications) MarshalJSON() ([]byte, error) {
+	if cn.Boolean != nil {
+		return json.Marshal(*cn.Boolean)
+	}
+	return json.Marshal(*cn.ID)
+}
+
+func (cn *changeNotifications) UnmarshalJSON(js []byte) error {
+	*cn = changeNotifications{}
+	if err := json.Unmarshal(js, *cn.Boolean); err != nil {
+		return json.Unmarshal(js, *cn.ID)
 	}
 	return nil
 }
