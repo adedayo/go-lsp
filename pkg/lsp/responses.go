@@ -169,9 +169,9 @@ func (du *declarationUnion) MarshalJSON() ([]byte, error) {
 
 func (du *declarationUnion) UnmarshalJSON(js []byte) error {
 	*du = declarationUnion{}
-	if err := json.Unmarshal(js, *du.Boolean); err != nil {
-		if err = json.Unmarshal(js, *du.Options); err != nil {
-			return json.Unmarshal(js, *du.RegistrationOptions)
+	if err := json.Unmarshal(js, du.Boolean); err != nil {
+		if err = json.Unmarshal(js, du.Options); err != nil {
+			return json.Unmarshal(js, du.RegistrationOptions)
 		}
 	}
 	return nil
@@ -232,9 +232,9 @@ func (tdu *typeDefinitionUnion) MarshalJSON() ([]byte, error) {
 
 func (tdu *typeDefinitionUnion) UnmarshalJSON(js []byte) error {
 	*tdu = typeDefinitionUnion{}
-	if err := json.Unmarshal(js, *tdu.Boolean); err != nil {
-		if err = json.Unmarshal(js, *tdu.Options); err != nil {
-			return json.Unmarshal(js, *tdu.RegistrationOptions)
+	if err := json.Unmarshal(js, tdu.Boolean); err != nil {
+		if err = json.Unmarshal(js, tdu.Options); err != nil {
+			return json.Unmarshal(js, tdu.RegistrationOptions)
 		}
 	}
 	return nil
@@ -270,9 +270,9 @@ func (ipu *implementationProviderUnion) MarshalJSON() ([]byte, error) {
 
 func (ipu *implementationProviderUnion) UnmarshalJSON(js []byte) error {
 	*ipu = implementationProviderUnion{}
-	if err := json.Unmarshal(js, *ipu.Boolean); err != nil {
-		if err = json.Unmarshal(js, *ipu.Options); err != nil {
-			return json.Unmarshal(js, *ipu.RegistrationOptions)
+	if err := json.Unmarshal(js, ipu.Boolean); err != nil {
+		if err = json.Unmarshal(js, ipu.Options); err != nil {
+			return json.Unmarshal(js, ipu.RegistrationOptions)
 		}
 	}
 	return nil
@@ -332,6 +332,7 @@ type workspaceServerCapabilities struct {
 	WorkspaceFolders WorkspaceFolderServerCapabilities
 }
 
+//WorkspaceFolderServerCapabilities indicates whether the server supports workspace folder
 type WorkspaceFolderServerCapabilities struct {
 	Supported           *bool                `json:"supported,omitempty"`
 	ChangeNotifications *changeNotifications `json:"changeNotifications,omitempty"`
@@ -351,8 +352,8 @@ func (cn *changeNotifications) MarshalJSON() ([]byte, error) {
 
 func (cn *changeNotifications) UnmarshalJSON(js []byte) error {
 	*cn = changeNotifications{}
-	if err := json.Unmarshal(js, *cn.Boolean); err != nil {
-		return json.Unmarshal(js, *cn.ID)
+	if err := json.Unmarshal(js, cn.Boolean); err != nil {
+		return json.Unmarshal(js, cn.ID)
 	}
 	return nil
 }

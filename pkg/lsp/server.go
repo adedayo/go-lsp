@@ -17,7 +17,7 @@ type Server interface {
 	Exit(req *jsonrpc2.Request)
 }
 
-//DefaultMethodProvider interface allows embedders of `DefaultServer` to be able to provide
+//DefaultMethodProvider interface allows the embedding struct of `DefaultServer` to be able to provide
 // custom implementations for LSP RPC calls that are not implemented by the DefaultServer
 type DefaultMethodProvider interface {
 	Default(req *jsonrpc2.Request)
