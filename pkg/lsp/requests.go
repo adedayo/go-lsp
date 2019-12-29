@@ -274,7 +274,7 @@ type diagnosticTagSupport struct {
 
 //FoldingRangeClientCapabilities describes client capabilities specific to `textDocument/foldingRange requests`.
 type FoldingRangeClientCapabilities struct {
-	DynamicRegistration *bool `json:"dynamicRegistration,omitempty"`
-	RangeLimit          *int  `json:"RangeLimit,omitempty"`
-	LineFoldingOnly     *bool `json:"lineFoldingOnly,omitempty"`
+	DynamicRegistration *bool  `json:"dynamicRegistration,omitempty"`
+	RangeLimit          *int64 `json:"RangeLimit,omitempty"`
+	LineFoldingOnly     *bool  `json:"lineFoldingOnly,omitempty"`
 }

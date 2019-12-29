@@ -6,9 +6,14 @@ import (
 
 //Transport is a protocol-agnostic transport interface for JSON RPC 2.0 messages
 type Transport interface {
-	SendResponse(id *ID, data []byte)
-	SendNotification(data []byte)
-	SendErrorResponse(id *ID, err *Error)
+	//SendResponse constructs a JSON RPC 2.0 Response using the `id` and `data` (converted to JSON raw message)
+	//over a Stream returning an error as may be necessary
+	SendResponse(id *ID, data interface{}) error
+	//SendNotification constructs a JSON RPC 2.0 Notification using the `data` (converted to JSON raw message)
+	//over a Stream returning an error as may be necessary
+	SendNotification(data interface{}) error
+	//SendErrorResponse sends an error `err` over some Stream in response to an error associated with the response identified by `id`
+	SendErrorResponse(id *ID, err *Error) error
 }
 
 //DefaultTransport is a default implementation of the `Transport` interface
@@ -30,38 +35,64 @@ func MakeTransport(io Stream) *DefaultTransport {
 	return &dt
 }
 
-//SendResponse sends
-func (dt *DefaultTransport) SendResponse(id *ID, data []byte) {
-	rawMessage := json.RawMessage(data)
+//SendResponse constructs a JSON RPC 2.0 Response using the `id` and `data` (converted to JSON raw message)
+//over a Stream returning an error as may be necessary
+func (dt *DefaultTransport) SendResponse(id *ID, data interface{}) error {
+	raw, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	rawMessage := json.RawMessage(raw)
 	response := Response{
 		Version: VersionTag{},
 		ID:      id,
 		Result:  &rawMessage,
 	}
-	if outBytes, err := json.Marshal(response); err == nil {
-		dt.io.Write(outBytes)
+	outBytes, err := json.Marshal(response)
+	if err != nil {
+		return err
 	}
+
+	dt.io.Write(outBytes)
+	return nil
+
 }
 
-func (dt *DefaultTransport) SendNotification(method string, data []byte) {
-	rawMessage := json.RawMessage(data)
+//SendNotification constructs a JSON RPC 2.0 Notification using the `data` (converted to JSON raw message)
+//over a Stream returning an error as may be necessary
+func (dt *DefaultTransport) SendNotification(method string, data interface{}) error {
+	raw, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	rawMessage := json.RawMessage(raw)
 	response := Request{
 		Version: VersionTag{},
 		Method:  method,
 		Params:  &rawMessage,
 	}
-	if outBytes, err := json.Marshal(response); err == nil {
-		dt.io.Write(outBytes)
+	outBytes, err := json.Marshal(response)
+	if err != nil {
+		return err
 	}
+
+	dt.io.Write(outBytes)
+	return nil
 }
 
-func (dt *DefaultTransport) SendErrorResponse(id *ID, err *Error) {
+//SendErrorResponse sends an error `errX` over some Stream in response to an error associated with the response identified by `id`
+func (dt *DefaultTransport) SendErrorResponse(id *ID, errX *Error) error {
 	response := Response{
 		Version: VersionTag{},
 		ID:      id,
-		Error:   err,
+		Error:   errX,
 	}
-	if outBytes, err := json.Marshal(response); err == nil {
-		dt.io.Write(outBytes)
+
+	outBytes, err := json.Marshal(response)
+	if err != nil {
+		return err
 	}
+
+	dt.io.Write(outBytes)
+	return nil
 }

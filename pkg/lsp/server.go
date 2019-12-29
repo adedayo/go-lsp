@@ -2,7 +2,6 @@ package lsp
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 
@@ -102,6 +101,8 @@ func (s *DefaultServer) Start(in io.Reader, out io.Writer) {
 					s.forward(req)
 				}
 			} else {
+				f.WriteString("Got Error " + err.Error() + "\nMessage: " + string(buf))
+
 				//TODO: determine what to do on receipt of a malformed request
 			}
 		} else {
@@ -118,7 +119,7 @@ func (s *DefaultServer) Stop() {
 
 //forward forwards the request to the embedding server's default handler
 func (s *DefaultServer) forward(req *jsonrpc2.Request) {
-	f.WriteString(fmt.Sprintf("\n\n%s, %s\n\n", req.Method, req.Params))
+	// f.WriteString(fmt.Sprintf("\n\n%s, %s\n\n", req.Method, req.Params))
 	if s.embeddingServer != nil {
 		(*s.embeddingServer).Default(req)
 	}
@@ -146,9 +147,7 @@ func (s *DefaultServer) Initialize(req *jsonrpc2.Request) {
 		},
 	}
 
-	if raw, err := json.Marshal(result); err == nil {
-		s.SendResponse(req.ID, raw)
-	} else {
+	if err := s.SendResponse(req.ID, result); err != nil {
 		e := jsonrpc2.Error{
 			Message: err.Error(),
 			Code:    jsonrpc2.CodeInternalError,

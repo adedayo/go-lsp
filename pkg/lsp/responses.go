@@ -363,6 +363,6 @@ func (cn *changeNotifications) UnmarshalJSON(js []byte) error {
 //PublishDiagnosticsParams are Diagnostics notification parameters  sent from the server to the client to signal results of validation runs
 type PublishDiagnosticsParams struct {
 	URI         code.DocumentURI `json:"uri"`
-	Version     *int             `json:"version,omitempty"`
+	Version     *int64           `json:"version,omitempty"`
 	Diagnostics []Diagnostic     `json:"diagnostics"`
 }
