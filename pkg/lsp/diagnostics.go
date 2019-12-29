@@ -41,6 +41,7 @@ func (id *DiagnosticCode) String() string {
 	return "#" + strconv.FormatInt(id.NumberID, 10)
 }
 
+//MarshalJSON marshals DiagnosticCode to JSON
 func (id *DiagnosticCode) MarshalJSON() ([]byte, error) {
 	if id.StringID != "" {
 		return json.Marshal(id.StringID)
@@ -48,6 +49,7 @@ func (id *DiagnosticCode) MarshalJSON() ([]byte, error) {
 	return json.Marshal(id.NumberID)
 }
 
+//UnmarshalJSON unmarshal DiagnosticCode from JSON
 func (id *DiagnosticCode) UnmarshalJSON(js []byte) error {
 	*id = DiagnosticCode{}
 	if err := json.Unmarshal(js, &id.NumberID); err != nil {
