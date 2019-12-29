@@ -1,13 +1,17 @@
 package lsp
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/adedayo/go-lsp/pkg/code"
+)
 
 //InitializeParams see https://microsoft.github.io/language-server-protocol/specifications/specification-3-15/
 type InitializeParams struct {
 	ProcessID             *int64             `json:"processId,omitempty"`
 	ClientInfo            *ClientInfo        `json:"clientInfo,omitempty"`
 	RootPath              *string            `json:"rootPath,omitempty"`
-	RootURI               *DocumentURI       `json:"documentUri,omitempty"`
+	RootURI               *code.DocumentURI  `json:"documentUri,omitempty"`
 	InitializationOptions *json.RawMessage   `json:"initializationOptions,omitempty"`
 	Capabilities          ClientCapabilities `json:"capabilities"`
 	Trace                 *string            `json:"trace,omitempty"`
@@ -19,9 +23,6 @@ type ClientInfo struct {
 	Name    string  `json:"name"`
 	Version *string `json:"version,omitempty"`
 }
-
-//DocumentURI The rootUri of the workspace.
-type DocumentURI string
 
 //ClientCapabilities The capabilities provided by the client (editor or tool)
 type ClientCapabilities struct {
@@ -67,8 +68,8 @@ type TextDocumentClientCapabilities struct {
 
 //WorkspaceFolder a workspace folder
 type WorkspaceFolder struct {
-	URI  DocumentURI `json:"uri"`
-	Name DocumentURI `json:"name"`
+	URI  code.DocumentURI `json:"uri"`
+	Name code.DocumentURI `json:"name"`
 }
 
 //WorkspaceEditClientCapabilities Capabilities specific to `WorkspaceEdit`s
@@ -138,8 +139,16 @@ type symbolKind int
 type completionItemTag int
 type diagnosticTag int
 type completionItemKind int
-type resourceOperationKind int
-type failureHandlingKind int
+type resourceOperationKind string
+type failureHandlingKind string
+
+//DiagnosticRelatedInformation Represents a related message and source code location for a diagnostic. This should be
+// used to point to code locations that cause or are related to a diagnostics, e.g when duplicating
+// a symbol in a scope.
+type DiagnosticRelatedInformation struct {
+	Location code.Location `json:"location"`
+	Message  string        `json:"message"`
+}
 
 //HoverClientCapabilities describes client capabilities specific to the `textDocument/hover`
 type HoverClientCapabilities struct {

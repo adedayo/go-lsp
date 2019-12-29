@@ -1,4 +1,4 @@
-package lsp
+package jsonrpc2
 
 import (
 	"bufio"

@@ -2,6 +2,8 @@ package lsp
 
 import "encoding/json"
 
+import "github.com/adedayo/go-lsp/pkg/code"
+
 //ResponseMessage see https://microsoft.github.io/language-server-protocol/specifications/specification-3-15/#responseMessage
 type ResponseMessage struct {
 }
@@ -356,4 +358,11 @@ func (cn *changeNotifications) UnmarshalJSON(js []byte) error {
 		return json.Unmarshal(js, cn.ID)
 	}
 	return nil
+}
+
+//PublishDiagnosticsParams are Diagnostics notification parameters  sent from the server to the client to signal results of validation runs
+type PublishDiagnosticsParams struct {
+	URI         code.DocumentURI `json:"uri"`
+	Version     *int             `json:"version,omitempty"`
+	Diagnostics []Diagnostic     `json:"diagnostics"`
 }
