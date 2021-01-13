@@ -2,16 +2,15 @@ package lsp
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 
 	"github.com/adedayo/go-lsp/pkg/jsonrpc2"
 )
 
-var (
-	f, _ = os.Create("debug_from_server.txt")
-)
+// var (
+// f, _ = os.Create("debug_from_server.txt")
+// )
 
 //Server defines the contracts
 type Server interface {
@@ -118,7 +117,7 @@ func (s *DefaultServer) Stop() {
 
 //forward forwards the request to the embedding server's default handler
 func (s *DefaultServer) forward(req *jsonrpc2.Request) {
-	f.WriteString(fmt.Sprintf("\n\n%s, %s\n\n", req.Method, req.Params))
+	// f.WriteString(fmt.Sprintf("\n\n%s, %s\n\n", req.Method, req.Params))
 	if s.embeddingServer != nil {
 		(*s.embeddingServer).Default(req)
 	}
