@@ -8,9 +8,9 @@ import (
 	"github.com/adedayo/go-lsp/pkg/jsonrpc2"
 )
 
-var (
-	f, _ = os.Create("debug_from_server.txt")
-)
+// var (
+// f, _ = os.Create("debug_from_server.txt")
+// )
 
 //Server defines the contracts
 type Server interface {

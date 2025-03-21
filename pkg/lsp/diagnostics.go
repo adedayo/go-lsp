@@ -25,7 +25,7 @@ export const Hint: 4 = 4;
 */
 type DiagnosticSeverity int
 
-//DiagnosticCode is a code which might appear in the user interface relating to a diagnostic
+// DiagnosticCode is a code which might appear in the user interface relating to a diagnostic
 type DiagnosticCode struct {
 	NumberID int64
 	StringID string
@@ -41,7 +41,7 @@ func (id *DiagnosticCode) String() string {
 	return "#" + strconv.FormatInt(id.NumberID, 10)
 }
 
-//MarshalJSON marshals DiagnosticCode to JSON
+// MarshalJSON marshals diagnostic code as expected
 func (id *DiagnosticCode) MarshalJSON() ([]byte, error) {
 	if id.StringID != "" {
 		return json.Marshal(id.StringID)
@@ -49,7 +49,7 @@ func (id *DiagnosticCode) MarshalJSON() ([]byte, error) {
 	return json.Marshal(id.NumberID)
 }
 
-//UnmarshalJSON unmarshal DiagnosticCode from JSON
+// UnmarshalJSON unmarshals byte slice into DiagnosticCode
 func (id *DiagnosticCode) UnmarshalJSON(js []byte) error {
 	*id = DiagnosticCode{}
 	if err := json.Unmarshal(js, &id.NumberID); err != nil {
@@ -58,7 +58,7 @@ func (id *DiagnosticCode) UnmarshalJSON(js []byte) error {
 	return nil
 }
 
-//Diagnostic represents some diagnostic information such as compiler error or warning
+// Diagnostic represents some diagnostic information such as compiler error or warning
 type Diagnostic struct {
 	Range              code.Range                      `json:"range"`
 	Severity           *DiagnosticSeverity             `json:"severity,omitempty"`
